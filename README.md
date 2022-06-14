@@ -1,19 +1,14 @@
-# vue-ego
+## 左侧导航结构：
 
-## Project setup
-```
-yarn install
-```
+1.分析报表概览--report_form
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+2.设备台账信息--base_info
 
-### Compiles and minifies for production
-```
-yarn build
-```
+3.设备检查管理--inspection_manage
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+4.设备维修保养--maintain_manage
+
+5.业务流程管理--process_manage
+
+
+
