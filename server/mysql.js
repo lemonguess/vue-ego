@@ -6,8 +6,8 @@ const client = mysql.createConnection({
     host: 'localhost', //数据库域名 地址
     port: '3306', // 端口
     user: 'root', // 用户名称
-    password: '', // 数据库密码 xampp集成
-    database: 'ego'// 库名称
+    password: '348!r^pAiC3D', // 数据库密码 xampp集成
+    database: 'vue-ego'// 库名称
 })
 
 // 封装数据库操作语句 sql语句 参数数组arr  callback成功函数结构

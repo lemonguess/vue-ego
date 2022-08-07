@@ -5,6 +5,7 @@
  */
 const base = {
     goodsList:'/api/projectList', //商品列表
+    search:'/api/search', //商品搜索
 }
 
 export default base;

@@ -2,7 +2,8 @@
 <div class="base">
   <!-- 1.搜索区域 -->
   <div class="header">
-    <el-input v-model="input" placeholder="请输入内容"></el-input>
+    <!--  change 仅在输入框失去焦点或用户按下回车时触发  -->
+    <el-input @change="searchInp" v-model="input" placeholder="请输入内容"></el-input>
     <el-button type="primary">查询</el-button>
     <el-button type="primary">添加</el-button>
   </div>
@@ -24,7 +25,7 @@
           fixed
           prop="number"
           label="管理号码"
-          width="100">
+          width="100" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
           fixed
@@ -40,19 +41,19 @@
       <el-table-column
           prop="serial_number"
           label="出厂编号"
-          width="100">
+          width="100" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
           prop="manufacture_date"
           label="出厂日期"
           sortable
           width="100"
-          column-key="date">
+          column-key="date" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
           prop="manufacturer"
           label="生产厂家"
-          width="120">
+          width="120" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
           prop="address"
@@ -74,7 +75,7 @@
           label="购置时间"
           sortable
           width="100"
-          column-key="date"
+          column-key="date" show-overflow-tooltip
       >
       </el-table-column>
       <el-table-column
@@ -82,7 +83,7 @@
           label="进场时间"
           sortable
           width="100"
-          column-key="date"
+          column-key="date" show-overflow-tooltip
 
       >
       </el-table-column>
@@ -127,628 +128,70 @@
     </el-table>
   </div>
   <!-- 3.分页 -->
+  <MyPagination
+    :total="total"
+    :pageSize="pageSize"
+    @changePage="changePage"
+  />
+<!--  &lt;!&ndash; 4.弹框 &ndash;&gt;-->
+<!--  <el-dialog-->
+<!--      title="提示"-->
+<!--      :visible.sync="dialogVisible"-->
+<!--      width="30%">-->
+<!--    <span>这是一段信息</span>-->
+<!--    <span slot="footer" class="dialog-footer">-->
+<!--    <el-button @click="dialogVisible = false">取 消</el-button>-->
+<!--    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+<!--  </span>-->
+<!--  </el-dialog>-->
+
 </div>
 </template>
 
 <script>
+import MyPagination from '../../components/MyPagination.vue'
 export default {
+  components: {
+    MyPagination
+  },
   name: "Base",
   data() {
     return {
       input: '',
-      tableData: [
-          {
-      id: 1,
-      number: '110-0001-0404',
-      name: '轮式装载机',
-      specifications: 'LG855',
-      serial_number: 'LZ50C1203005',
-      manufacture_date: '2017-07-01',
-      manufacturer: '中国龙工控股有限公司',
-      address: '搅拌站',
-      user: '李先朋',
-      original_value: '150000',
-      purchase_date: '2012-10-15',
-      entry_date: '2019-10-18',
-      technical_status: '二类',
-      weight: '16000',
-      power_specifications: '162KW',
-      remark_info: ''
-
-    },
-        {
-      id: 2,
-      number: '110-0001-0404',
-      name: '轮式装载机',
-      specifications: 'LG855',
-      serial_number: 'LZ50C1203005',
-      manufacture_date: '2017-07-01',
-      manufacturer: '中国龙工控股有限公司',
-      address: '搅拌站',
-      user: '李先朋',
-      original_value: '150000',
-      purchase_date: '2012-10-15',
-      entry_date: '2019-10-18',
-      technical_status: '一类',
-      weight: '16000',
-      power_specifications: '162KW',
-      remark_info: ''
-
-    },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 1,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '二类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-        {
-          id: 2,
-          number: '110-0001-0404',
-          name: '轮式装载机',
-          specifications: 'LG855',
-          serial_number: 'LZ50C1203005',
-          manufacture_date: '2017-07-01',
-          manufacturer: '中国龙工控股有限公司',
-          address: '搅拌站',
-          user: '李先朋',
-          original_value: '150000',
-          purchase_date: '2012-10-15',
-          entry_date: '2019-10-18',
-          technical_status: '一类',
-          weight: '16000',
-          power_specifications: '162KW',
-          remark_info: ''
-
-        },
-      ]
+      tableData: [],
+      total: 10,
+      pageSize: 1,
+      type:1
     }
   },
   methods: {
+    //分页页码
+    changePage(num){
+      if (this.type===1){
+        this.http(num);//商品列表分页
+      }else{//搜索分页
+        console.log('搜索的分页');
+      }
+    this.http(num);
+    },
+    //搜索查询数据-----------------------
+    searchInp(val){
+      console.log('搜索', val);
+      this.$api.getSearch({
+        search: val,
+        page: 1,
+        pageSize: 10
+      }).then(res=>{
+        console.log('搜索---', res.data);
+        if(res.data.status === 200){
+          this.tableData = res.data.result;
+          this.total = res.data.total;
+          this.pageSize = 10;
+        }
+      })
+
+    },
+
     resetDateFilter() {
       this.$refs.filterTable.clearFilter('date');
     },
@@ -767,16 +210,25 @@ export default {
     //删除操作
     handleDelete(index, row) {
       console.log(index, row);
+    },
+    //商品列表的获取
+    http(page){
+      this.$api.getGoodsList({
+        page:page,
+        pageSize:10
+      })
+          .then(res => {
+            if(res.status===200){
+              this.tableData = res.data.data.result; //数据列表
+              console.log(this.tableData)
+              this.total = res.data.data.total;
+            }
+          })
     }
   },
   //生命周期函数
   created() {
-    this.$api.getGoodsList({
-      page: 1
-    })
-    .then(res => {
-      console.log(res.data);
-    })
+this.http(1)
   }
 }
 </script>
